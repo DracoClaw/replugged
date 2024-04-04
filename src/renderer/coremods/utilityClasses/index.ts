@@ -86,7 +86,7 @@ function messageDataAttributes(): void {
     props["data-is-author-self"] = message.author.id === users.getCurrentUser().id;
     props["data-is-author-bot"] = message.author.bot;
     // webhooks are also considered bots
-    if (message.author.bot) {
+    if (message.author.bot && !message.interaction) {
       props["data-is-author-webhook"] = Boolean(message.webhookId);
     }
     props["data-author-id"] = message.author.id;
