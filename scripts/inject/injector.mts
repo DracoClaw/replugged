@@ -238,7 +238,7 @@ export const smartInject = async (
       cmd === "uninject"
         ? await uninject(platformModule, platform)
         : inject(platformModule, platform, production);
-    if (((replug && cmd !== "uninject") || !replug) && processInfo) {
+    if ((replug && cmd !== "uninject") || !replug) {
       const appDir = await platformModule.getAppDir(platform);
       switch (process.platform) {
         case "win32":
