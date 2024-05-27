@@ -19,7 +19,6 @@ import Icons from "../icons";
 import { Logger, plugins, themes, webpack } from "@replugged";
 import { generalSettings } from "./General";
 import { openExternal } from "src/renderer/util";
-import { filters } from "@webpack";
 
 interface Breadcrumb {
   id: string;
@@ -36,7 +35,7 @@ interface BreadcrumbProps {
 const logger = Logger.coremod("AddonSettings");
 
 const Breadcrumbs = await webpack.waitForModule<React.ComponentClass<BreadcrumbProps>>(
-  filters.bySource(/\w+.breadcrumbFinalWrapper/),
+  webpack.filters.bySource(/\w+.breadcrumbFinalWrapper/),
 );
 
 export enum AddonType {
