@@ -115,8 +115,7 @@ const run = async (cmd = ctx.getPositionalArg(2), replug = false): Promise<void>
         "\n",
       );
       console.log(
-        `You now have to completely close the Discord client, from the system tray or through the task manager.\n
-To plug into a different platform, use the following syntax: ${AnsiEscapes.BOLD}${
+        `To plug into a different platform, use the following syntax: ${AnsiEscapes.BOLD}${
           AnsiEscapes.GREEN
         }${getCommand({ action: replug ? "replug" : "plug", prod })}${AnsiEscapes.RESET}`,
       );
@@ -143,8 +142,7 @@ To plug into a different platform, use the following syntax: ${AnsiEscapes.BOLD}
           "\n",
         );
         console.log(
-          `You now have to completely close the Discord client, from the system tray or through the task manager.\n
-To unplug from a different platform, use the following syntax: ${AnsiEscapes.BOLD}${
+          `To unplug from a different platform, use the following syntax: ${AnsiEscapes.BOLD}${
             AnsiEscapes.GREEN
           }${getCommand({ action: "unplug", prod })}${AnsiEscapes.RESET}`,
         );
