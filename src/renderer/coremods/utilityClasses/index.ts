@@ -70,27 +70,27 @@ function nitroThemeClass(): void {
   onNitroThemeChange(ClientThemesBackgroundStore, ThemeIDMap);
 }
 
-async function messageDataAttributes(): Promise<void> {
-  const Message = await waitForProps<{
-    default: { type: (msg: { message: Message }) => React.ReactElement };
-    getElementFromMessage: unknown;
-  }>("getElementFromMessage");
+// async function messageDataAttributes(): Promise<void> {
+//   const Message = await waitForProps<{
+//     default: { type: (msg: { message: Message }) => React.ReactElement };
+//     getElementFromMessage: unknown;
+//   }>("getElementFromMessage");
 
-  inject.after(Message.default, "type", ([{ message }], res) => {
-    const props = res.props?.children?.props?.children?.props;
-    if (!props) return;
-    props["data-is-author-self"] = message.author.id === users.getCurrentUser().id;
-    props["data-is-author-bot"] = message.author.bot;
-    // webhooks are also considered bots
-    if (message.author.bot && !message.interaction) {
-      props["data-is-author-webhook"] = Boolean(message.webhookId);
-    }
-    props["data-author-id"] = message.author.id;
-    props["data-message-type"] = message.type; // raw enum value, seems consistent enough to be useful
-    if (message.blocked) props["data-is-blocked"] = "true";
-    return res;
-  });
-}
+//   inject.after(Message.default, "type", ([{ message }], res) => {
+//     const props = res.props?.children?.props?.children?.props;
+//     if (!props) return;
+//     props["data-is-author-self"] = message.author.id === users.getCurrentUser().id;
+//     props["data-is-author-bot"] = message.author.bot;
+//     // webhooks are also considered bots
+//     if (message.author.bot && !message.interaction) {
+//       props["data-is-author-webhook"] = Boolean(message.webhookId);
+//     }
+//     props["data-author-id"] = message.author.id;
+//     props["data-message-type"] = message.type; // raw enum value, seems consistent enough to be useful
+//     if (message.blocked) props["data-is-blocked"] = "true";
+//     return res;
+//   });
+// }
 
 function addHtmlClasses(): void {
   if (!html.classList.contains("replugged")) {
