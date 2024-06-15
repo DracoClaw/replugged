@@ -61,7 +61,7 @@ export async function startAll(): Promise<void> {
   coremods.watcher = await import("../coremods/watcher");
   coremods.commands = await import("../coremods/commands");
   coremods.welcome = await import("../coremods/welcome");
-  coremods.utilityClasses = await import("../coremods/utilityClasses");
+  //coremods.utilityClasses = await import("../coremods/utilityClasses");
 
   await Promise.all(
     Object.entries(coremods).map(async ([name, mod]) => {
