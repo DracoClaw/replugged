@@ -1,5 +1,5 @@
 import { Injector } from "@replugged";
-import { getByProps, getByStoreName } from "src/renderer/modules/webpack";
+import { getByProps, getByStoreName, getModule } from "src/renderer/modules/webpack";
 import { users } from "@common";
 import type React from "react";
 import type { Store } from "src/renderer/modules/common/flux";
@@ -75,6 +75,8 @@ function messageDataAttributes(): void {
     default: { type: (msg: { message: Message }) => React.ReactElement };
     getElementFromMessage: unknown;
   }>("getElementFromMessage");
+
+  console.log(Message);
 
   if (!Message) {
     throw new Error("Failed to find Message module!");
