@@ -1,5 +1,5 @@
-import { Injector } from "@replugged";
-import { getByProps, getByStoreName, getModule } from "src/renderer/modules/webpack";
+import { Injector, injector } from "@replugged";
+import { getByProps, getByStoreName, waitForProps } from "src/renderer/modules/webpack";
 import { users } from "@common";
 import type React from "react";
 import type { Store } from "src/renderer/modules/common/flux";
@@ -70,17 +70,11 @@ function nitroThemeClass(): void {
   onNitroThemeChange(ClientThemesBackgroundStore, ThemeIDMap);
 }
 
-function messageDataAttributes(): void {
-  const Message = getByProps<{
+async function messageDataAttributes(): Promise<void> {
+  const Message = await waitForProps<{
     default: { type: (msg: { message: Message }) => React.ReactElement };
     getElementFromMessage: unknown;
   }>("getElementFromMessage");
-
-  console.log(Message);
-
-  if (!Message) {
-    throw new Error("Failed to find Message module!");
-  }
 
   inject.after(Message.default, "type", ([{ message }], res) => {
     const props = res.props?.children?.props?.children?.props;
