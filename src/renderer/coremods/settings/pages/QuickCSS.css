@@ -1,19 +1,10 @@
-<<<<<<< HEAD
-#replugged-quickcss-wrapper {
-  color: var(--text-normal);
-}
-
-#replugged-quickcss-wrapper[data-popout="true"] {
-  width: 100% !important;
-}
-
-=======
 /* Wrapper */
 #rp-quickcss-tab,
 #replugged-quickcss-wrapper {
   height: 100%;
+  width: 100%;
+  color: var(--text-normal);
 }
->>>>>>> upstream/main
 #replugged-quickcss-wrapper .cm-editor {
   max-height: calc(100% - 20px);
   background: var(--bg-overlay-2, var(--background-secondary));
