@@ -1,16 +1,16 @@
 import type { Promisable } from "type-fest";
 import { patchPlaintext } from "../modules/webpack/plaintext-patch";
 
-import { default as experimentsPlaintext } from "../coremods/experiments/plaintextPatches";
-import { default as notrackPlaintext } from "../coremods/notrack/plaintextPatches";
-import { default as noDevtoolsWarningPlaintext } from "../coremods/noDevtoolsWarning/plaintextPatches";
-import { default as messagePopover } from "../coremods/messagePopover/plaintextPatches";
-import { default as notices } from "../coremods/notices/plaintextPatches";
-import { default as contextMenu } from "../coremods/contextMenu/plaintextPatches";
-import { default as languagePlaintext } from "../coremods/language/plaintextPatches";
-import { default as commandsPlaintext } from "../coremods/commands/plaintextPatches";
-import { default as settingsPlaintext } from "../coremods/settings/plaintextPatches";
 import { default as badgesPlaintext } from "../coremods/badges/plaintextPatches";
+import { default as commandsPlaintext } from "../coremods/commands/plaintextPatches";
+import { default as contextMenu } from "../coremods/contextMenu/plaintextPatches";
+import { default as experimentsPlaintext } from "../coremods/experiments/plaintextPatches";
+import { default as languagePlaintext } from "../coremods/language/plaintextPatches";
+import { default as messagePopover } from "../coremods/messagePopover/plaintextPatches";
+import { default as noDevtoolsWarningPlaintext } from "../coremods/noDevtoolsWarning/plaintextPatches";
+import { default as notices } from "../coremods/notices/plaintextPatches";
+import { default as notrackPlaintext } from "../coremods/notrack/plaintextPatches";
+import { default as settingsPlaintext } from "../coremods/settings/plaintextPatches";
 import { Logger } from "../modules/logger";
 
 const logger = Logger.api("Coremods");
@@ -35,7 +35,6 @@ export namespace coremods {
   export let watcher: Coremod;
   export let commands: Coremod;
   export let welcome: Coremod;
-  export let utilityClasses: Coremod;
 }
 
 export async function start(name: keyof typeof coremods): Promise<void> {
@@ -61,7 +60,6 @@ export async function startAll(): Promise<void> {
   coremods.watcher = await import("../coremods/watcher");
   coremods.commands = await import("../coremods/commands");
   coremods.welcome = await import("../coremods/welcome");
-  //coremods.utilityClasses = await import("../coremods/utilityClasses");
 
   await Promise.all(
     Object.entries(coremods).map(async ([name, mod]) => {
