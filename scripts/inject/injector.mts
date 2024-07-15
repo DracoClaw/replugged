@@ -1,23 +1,23 @@
+import { execSync } from "child_process";
+import { existsSync } from "fs";
 import { chown, copyFile, mkdir, rename, rm, stat, writeFile } from "fs/promises";
 import path, { join, sep } from "path";
 import { fileURLToPath } from "url";
+import { CONFIG_PATH } from "../../src/util.mjs";
 import { entryPoint as argEntryPoint, exitCode } from "./index.mjs";
+import type { DiscordPlatform, PlatformModule, ProcessInfo } from "./types.mjs";
 import {
   AnsiEscapes,
-  GetUserData,
   PlatformNames,
   getCommand,
   getProcessInfoByName,
+  getUserData,
   killProcessByPID,
   openProcess,
 } from "./util.mjs";
-import { execSync } from "child_process";
-import { DiscordPlatform, PlatformModule, ProcessInfo } from "./types.mjs";
-import { CONFIG_PATH } from "../../src/util.mjs";
-import { existsSync } from "fs";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-let processInfo: ProcessInfo;
+let processInfo: ProcessInfo | ProcessInfo[] | null;
 
 export const isDiscordInstalled = async (appDir: string, silent?: boolean): Promise<boolean> => {
   try {
@@ -121,6 +121,7 @@ export const inject = async (
   const entryPoint =
     argEntryPoint ??
     (prod ? join(CONFIG_PATH, "replugged.asar") : join(dirname, "..", "..", "dist/main.js"));
+
   const entryPointDir = path.dirname(entryPoint);
 
   if (appDir.includes("flatpak")) {
@@ -200,15 +201,23 @@ export const uninject = async (
     return false;
   }
 
-  await rm(appDir, { recursive: true, force: true });
-  await rename(join(appDir, "..", "app.orig.asar"), appDir);
-  // For discord_arch_electron
-  if (existsSync(join(appDir, "..", "app.orig.asar.unpacked"))) {
-    await rename(
-      join(appDir, "..", "app.orig.asar.unpacked"),
-      join(appDir, "..", "app.asar.unpacked"),
+  try {
+    await rm(appDir, { recursive: true, force: true });
+    await rename(join(appDir, "..", "app.orig.asar"), appDir);
+    // For discord_arch_electron
+    if (existsSync(join(appDir, "..", "app.orig.asar.unpacked"))) {
+      await rename(
+        join(appDir, "..", "app.orig.asar.unpacked"),
+        join(appDir, "..", "app.asar.unpacked"),
+      );
+    }
+  } catch {
+    console.error(
+      `${AnsiEscapes.RED}Failed to rename app.asar while unplugging. If Discord is open, make sure it is closed.${AnsiEscapes.RESET}`,
     );
+    process.exit(exitCode);
   }
+
   return true;
 };
 
@@ -221,24 +230,28 @@ export const smartInject = async (
   noRelaunch: boolean,
 ): Promise<boolean> => {
   let result;
-  if (noRelaunch) {
-    result =
-      cmd === "uninject"
-        ? await uninject(platformModule, platform)
-        : inject(platformModule, platform, production);
-  } else {
-    const processName = PlatformNames[platform].replace(" ", "");
+
+  const processName = PlatformNames[platform].replace(" ", "");
+  if (!noRelaunch) {
     try {
       if ((replug && cmd === "uninject") || !replug) {
         processInfo = getProcessInfoByName(processName)!;
-        await killProcessByPID(processInfo?.pid);
+        if (Array.isArray(processInfo)) {
+          await Promise.all(processInfo.map((info) => killProcessByPID(info.pid)));
+        } else {
+          await killProcessByPID(processInfo?.pid);
+        }
       }
     } catch {}
-    result =
-      cmd === "uninject"
-        ? await uninject(platformModule, platform)
-        : inject(platformModule, platform, production);
-    if ((replug && cmd !== "uninject") || !replug) {
+  }
+
+  result =
+    cmd === "uninject"
+      ? await uninject(platformModule, platform)
+      : await inject(platformModule, platform, production);
+
+  if (!noRelaunch) {
+    if (((replug && cmd !== "uninject") || !replug) && processInfo) {
       const appDir = await platformModule.getAppDir(platform);
       switch (process.platform) {
         case "win32":
@@ -250,7 +263,7 @@ export const smartInject = async (
           break;
         case "linux":
           openProcess(join(appDir, "..", "..", processName), [], {
-            ...GetUserData(),
+            ...getUserData(),
             detached: true,
             stdio: "ignore",
           });
@@ -261,5 +274,6 @@ export const smartInject = async (
       }
     }
   }
+
   return result;
 };
