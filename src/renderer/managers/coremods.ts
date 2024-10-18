@@ -2,7 +2,6 @@ import type { Promisable } from "type-fest";
 import { patchPlaintext } from "../modules/webpack/plaintext-patch";
 
 import { default as badgesPlaintext } from "../coremods/badges/plaintextPatches";
-import { default as commandsPlaintext } from "../coremods/commands/plaintextPatches";
 import { default as contextMenu } from "../coremods/contextMenu/plaintextPatches";
 import { default as experimentsPlaintext } from "../coremods/experiments/plaintextPatches";
 import { default as languagePlaintext } from "../coremods/language/plaintextPatches";
@@ -25,7 +24,6 @@ export namespace coremods {
   export let noDevtoolsWarning: Coremod;
   export let settings: Coremod;
   export let badges: Coremod;
-  export let notrack: Coremod;
   export let installer: Coremod;
   export let messagePopover: Coremod;
   export let notices: Coremod;
@@ -85,7 +83,6 @@ export function runPlaintextPatches(): void {
     notices,
     contextMenu,
     languagePlaintext,
-    commandsPlaintext,
     settingsPlaintext,
     badgesPlaintext,
   ].forEach(patchPlaintext);
