@@ -109,10 +109,10 @@ async function injectApplicationCommandIndexStore(): Promise<void> {
           .map((commandAndSection) => commandAndSection.section)
           .filter((section) => !res.descriptors.includes(section));
         if (res.descriptors.some((section) => section.id === "-2")) {
-          res.descriptors.splice(1, 0, ...sectionsToAdd);
+          res.descriptors.splice(res.descriptors.length - 1, 0, ...sectionsToAdd);
         } else {
           res.descriptors = Array.isArray(res.descriptors)
-            ? [...sectionsToAdd, ...res.descriptors]
+            ? [...res.descriptors, ...sectionsToAdd]
             : sectionsToAdd;
         }
       }
@@ -132,12 +132,12 @@ async function injectApplicationCommandIndexStore(): Promise<void> {
             c.id === res.sectionedCommands.find(({ section }) => section.id === "-2")?.data[0].id,
         );
         if (indexAt) {
-          res.commands.splice(indexAt, 0, ...commandsToAdd);
+          res.commands.splice(res.commands.length - 1, 0, ...commandsToAdd);
         } else {
           res.commands = Array.isArray(res.commands)
             ? [
-                ...commandsToAdd,
                 ...res.commands.filter((command) => !commandsToAdd.includes(command)),
+                ...commandsToAdd,
               ]
             : commandsToAdd;
         }
@@ -154,10 +154,10 @@ async function injectApplicationCommandIndexStore(): Promise<void> {
           data: Array.from(commandAndSection.commands.values()),
         }));
         if (res.sectionedCommands.some(({ section }) => section.id === "-2")) {
-          res.sectionedCommands.splice(1, 0, ...dataToAdd);
+          res.sectionedCommands.splice(res.sectionedCommands.length - 1, 0, ...dataToAdd);
         } else {
           res.sectionedCommands = Array.isArray(res.sectionedCommands)
-            ? [...dataToAdd, ...res.sectionedCommands]
+            ? [...res.sectionedCommands, ...dataToAdd]
             : dataToAdd;
         }
       }
