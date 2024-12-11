@@ -5,13 +5,16 @@
 }
 #replugged-quickcss-wrapper .cm-editor {
   max-height: calc(100% - 20px);
+  max-width: 100%;
   background: var(--bg-overlay-2, var(--background-secondary));
   border: 1px solid var(--background-secondary-alt);
   border-radius: 4px;
   outline: none !important;
+  white-space: pre-wrap;
 }
 #replugged-quickcss-wrapper .cm-content {
   padding: 0px;
+  white-space: pre-wrap;
 }
 #replugged-quickcss-wrapper .cm-content,
 #replugged-quickcss-wrapper .cm-gutter {
